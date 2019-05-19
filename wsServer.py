@@ -2,26 +2,22 @@
 
 import asyncio
 import websockets
+import socket
 
-async def hello(websocket, path):
-    name = await websocket.recv()
-    print(f"< {name}")
+localIp = socket.gethostbyname(socket.gethostname())
+print('Local ip:', localIp)
 
-    greeting = f"Hello {name}!"
-
-    await websocket.send(greeting)
-    print(f"> {greeting}")
-
-async def counter(websocket, path):
+async def main(websocket, path):
+    # Logic inside this method
     count = 0
     while True:
-        await websocket.send(str(count).encode())
+        
+        await websocket.send(str(count))
         await asyncio.sleep(1)
         count = count + 1
 
 
-start_server = websockets.serve(counter, 'localhost', 12000)
+start_server = websockets.serve(main, localIp, 12000)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
-
