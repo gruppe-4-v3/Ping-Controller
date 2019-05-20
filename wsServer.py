@@ -17,8 +17,9 @@ gameInProgress = False
 
 def middle_Click(event):
     global gameInProgress
-    if event.direction == "middle" & event.action == ACTION_PRESSED:
-        gameInProgress = True
+    if event.direction == "middle" and event.action == ACTION_PRESSED:
+        gameInProgress = not(gameInProgress)
+        print("change; gameInProgress value:", gameInProgress)
 
 sense.stick.direction_middle = middle_Click
 
@@ -27,11 +28,12 @@ async def main(websocket, path):
     global gameInProgress
 
     while True:
-        middle_Click(sense.stick.wait_for_event(True))
-        
-        while gameInProgress:
-            await asyncio.sleep(1)
-    
+        event = sense.stick.wait_for_event()
+        if event.direction == "middle":
+            while gameInProgress:
+                print("test")
+                await asyncio.sleep(1)
+
 
 start_server = websockets.serve(main, localIp, 12000)
 
