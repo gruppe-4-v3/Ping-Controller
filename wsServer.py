@@ -3,7 +3,7 @@
 import asyncio
 import websockets
 import socket
-from sense_hat import SenseHat, ACTION_PRESSED
+from sense_hat import SenseHat
 from time import sleep
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -18,7 +18,7 @@ gameInProgress = False
 
 def middle_Click(event):
     global gameInProgress
-    if event.direction == "middle" and event.action == ACTION_PRESSED:
+    if event.action == "released":
         gameInProgress = not(gameInProgress)
         print("change; gameInProgress value:", gameInProgress)
 
@@ -27,7 +27,6 @@ sense.stick.direction_middle = middle_Click
 async def main(websocket, path):
     # Logic inside this method
     global gameInProgress
-    global sense
 
     while True:
         sense.stick.wait_for_event()
@@ -36,15 +35,16 @@ async def main(websocket, path):
         speed = 0
         red = (255, 0, 0)
 
+        print("Before while start")
         while gameInProgress:
             acceleration = sense.get_accelerometer_raw()
             x = acceleration['x']
-            
+
             speed *= 0.9
-        
+
             if (x > 0.1 or x < -0.1):
                 speed += x
-            
+
             print("speed:", speed)
             websocket.send(speed)
 
