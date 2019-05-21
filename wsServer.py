@@ -27,8 +27,9 @@ sense.stick.direction_middle = middle_Click
 async def main(websocket, path):
     # Logic inside this method
     global gameInProgress
+    print("Connection open.")
 
-    while True:
+    while websocket.open:
         sense.stick.wait_for_event()
         sleep(.5)
 
@@ -64,7 +65,7 @@ async def main(websocket, path):
             if (speed < 0.5 and speed > -0.5):
                 sense.set_pixel(4, 5, red)
                 sense.set_pixel(3, 5, red)
-
+        print("Connection closed.")
 
 start_server = websockets.serve(main, localIp, 12000)
 
