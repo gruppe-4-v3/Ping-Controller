@@ -47,7 +47,7 @@ async def main(websocket, path):
                 speed += x
 
             print("speed:", speed)
-            websocket.send(speed)
+            await websocket.send(str(speed))
 
             sense.clear()
             if (speed > 0.5 and speed < 1):
@@ -65,7 +65,7 @@ async def main(websocket, path):
             if (speed < 0.5 and speed > -0.5):
                 sense.set_pixel(4, 5, red)
                 sense.set_pixel(3, 5, red)
-        print("Connection closed.")
+    print("Connection closed.")
 
 start_server = websockets.serve(main, localIp, 12000)
 
