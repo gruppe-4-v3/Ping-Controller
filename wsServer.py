@@ -41,10 +41,13 @@ async def main(websocket, path):
             acceleration = sense.get_accelerometer_raw()
             x = acceleration['x']
 
-            speed *= 0.9
-
-            if (x > 0.1 or x < -0.1):
-                speed += x
+            speed = speed * 0.98
+            if (speed < 1 and speed > -1):
+                speed = speed * 0.9
+            elif (speed < 2 and speed > -2):
+                speed = speed * 0.95
+            if (x > 0.2 or x < -0.2):
+                speed += x * 2
 
             print("speed:", speed)
             await websocket.send(str(speed))
