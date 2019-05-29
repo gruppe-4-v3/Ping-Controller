@@ -49,6 +49,11 @@ async def main(websocket, path):
             if (x > 0.2 or x < -0.2):
                 speed += x * 2
 
+            if speed > 5:
+                speed = 5
+            elif speed < -5:
+                speed = -5
+
             print("speed:", speed)
             await websocket.send(str(speed))
 
